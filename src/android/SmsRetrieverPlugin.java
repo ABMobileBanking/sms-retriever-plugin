@@ -134,7 +134,7 @@ public class SmsRetrieverPlugin extends CordovaPlugin {
      * @return the code extracted
      */
     private String getOTPCode(String message) {
-        Pattern p = Pattern.compile("\\b\\d{6}\\b");
+        Pattern p = Pattern.compile("\\b\\d{4}\\b");
         Matcher m = p.matcher(message);
         String code = "";
         while (m.find()) {
