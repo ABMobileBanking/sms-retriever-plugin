@@ -8,6 +8,8 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 import android.util.Log;
 
+import android.os.Build; //Added for android 14 crash issue fix
+
 import com.google.android.gms.auth.api.phone.SmsRetriever;
 import com.google.android.gms.common.api.CommonStatusCodes;
 import com.google.android.gms.common.api.Status;
@@ -28,7 +30,14 @@ public class SmsRetrieverHandler {
     void startBroadcastReceiver() {
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(SmsRetriever.SMS_RETRIEVED_ACTION);
-        this.activity.registerReceiver(mSmsBroadcastReceiver, intentFilter);
+        //this.activity.registerReceiver(mSmsBroadcastReceiver, intentFilter,ContextCompat.RECEIVER_EXPORTED);
+
+        //Below code is used for android 14 crash issue fix
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            this.activity.registerReceiver(mSmsBroadcastReceiver, intentFilter, Context.RECEIVER_EXPORTED);
+        }else{
+            this.activity.registerReceiver(mSmsBroadcastReceiver, intentFilter);
+        }
     }
 
     protected OtpReceivedInterface<String> onOtpReceived;
