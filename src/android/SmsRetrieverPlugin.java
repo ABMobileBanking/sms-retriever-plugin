@@ -4,15 +4,11 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 
 import com.huawei.hms.support.sms.ReadSmsManager;
-import com.huawei.hmf.tasks.Task;
 
 import android.util.Log;
 
 import com.google.android.gms.auth.api.phone.SmsRetriever;
 import com.google.android.gms.auth.api.phone.SmsRetrieverClient;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 
 import org.apache.cordova.CallbackContext;
 import org.apache.cordova.CordovaInterface;
