@@ -86,14 +86,14 @@ public class SmsRetrieverPlugin extends CordovaPlugin {
      * Start OTP listener to receive SMS with code
      */
     private void startSMSListener() {
-        Activity activity = this.cordova.getActivity();
+       // Activity activity = this.cordova.getActivity();
         
         // Check if Google Play Services is available
-        int gmsStatus = GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(activity);
+        int gmsStatus = GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(this.activity);
     
         if (gmsStatus == ConnectionResult.SUCCESS) {
             // --- GOOGLE DEVICES ---
-            SmsRetrieverClient mClient = SmsRetriever.getClient(activity);
+            SmsRetrieverClient mClient = SmsRetriever.getClient(this.activity);
             com.google.android.gms.tasks.Task<Void> mTask = mClient.startSmsRetriever();
     
             mTask.addOnSuccessListener(new com.google.android.gms.tasks.OnSuccessListener<Void>() {
@@ -112,7 +112,7 @@ public class SmsRetrieverPlugin extends CordovaPlugin {
             
         } else {
             // --- HUAWEI DEVICES (Fallback) ---
-            com.huawei.hmf.tasks.Task<Void> hmsTask = ReadSmsManager.start(activity);
+            com.huawei.hmf.tasks.Task<Void> hmsTask = ReadSmsManager.start(this.activity);
     
             hmsTask.addOnSuccessListener(new com.huawei.hmf.tasks.OnSuccessListener<Void>() {
                 @Override
