@@ -31,8 +31,13 @@ public class SmsRetrieverHandler {
 
     void startBroadcastReceiver() {
         IntentFilter intentFilter = new IntentFilter();
+
+        //googleee
         intentFilter.addAction(SmsRetriever.SMS_RETRIEVED_ACTION);
         //this.activity.registerReceiver(mSmsBroadcastReceiver, intentFilter,ContextCompat.RECEIVER_EXPORTED);
+
+        //huaweiiiii
+        intentFilter.addAction("com.huawei.hms.auth.api.phone.SMS_RETRIEVED");
 
         //Below code is used for android 14 crash issue fix
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
