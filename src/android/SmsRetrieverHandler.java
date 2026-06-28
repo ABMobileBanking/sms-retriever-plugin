@@ -53,28 +53,60 @@ public class SmsRetrieverHandler {
         @Override
         public void onReceive(Context context, Intent intent) {
             Log.d(TAG, "onReceive: ");
-            if (SmsRetriever.SMS_RETRIEVED_ACTION.equals(intent.getAction())) {
-                Bundle extras = intent.getExtras();
-                Status mStatus = (Status) extras.get(SmsRetriever.EXTRA_STATUS);
-
+            String action = intent.getAction();
+            Bundle extras = intent.getExtras();
+        
+            if (extras == null) return;
+        
+            // ----------------------------
+            // 1. GOOGLE GMS SMS HANDLING
+            // ----------------------------
+            if (SmsRetriever.SMS_RETRIEVED_ACTION.equals(action)) {
+                Status mStatus = (Status) extras.get(SmsRetriever.EXTRA_STATUS); // Uses your existing Google import
+        
                 switch (mStatus.getStatusCode()) {
-                case CommonStatusCodes.SUCCESS:
-                    // Get SMS message contents'
-                    String message = (String) extras.get(SmsRetriever.EXTRA_SMS_MESSAGE);
-                    Log.d(TAG, "onReceive: failure " + message);
-                    if (onOtpReceived != null) {
-                        String otpMessage = message.replace("<#> Your otp code is: ", "");
-                        String otp = otpMessage.split("\n")[0];
-                        onOtpReceived.onOtpReceived(otp);
-                    }
-                    break;
-                case CommonStatusCodes.TIMEOUT:
-                    // Waiting for SMS timed out (5 minutes)
-                    Log.d(TAG, "onReceive: failure");
-                    if (onOtpReceived != null) {
-                        onOtpReceived.onOtpTimeout();
-                    }
-                    break;
+                    case CommonStatusCodes.SUCCESS:
+                        String message = (String) extras.get(SmsRetriever.EXTRA_SMS_MESSAGE);
+                        Log.d(TAG, "onReceive: GMS success " + message);
+                        if (onOtpReceived != null) {
+                            String otpMessage = message.replace("<#> Your otp code is: ", "");
+                            String otp = otpMessage.split("\n")[0];
+                            onOtpReceived.onOtpReceived(otp);
+                        }
+                        break;
+                    case CommonStatusCodes.TIMEOUT:
+                        Log.d(TAG, "onReceive: GMS timeout");
+                        if (onOtpReceived != null) {
+                            onOtpReceived.onOtpTimeout();
+                        }
+                        break;
+                }
+            } 
+            // ----------------------------
+            // 2. HUAWEI HMS SMS HANDLING
+            // ----------------------------
+            else if ("com.huawei.hms.auth.api.phone.SMS_RETRIEVED".equals(action)) {
+                // Explicitly cast to the Huawei Status object to prevent ClassCastException
+                com.huawei.hms.support.api.client.Status mStatus = 
+                    (com.huawei.hms.support.api.client.Status) extras.get(com.huawei.hms.support.sms.common.ReadSmsConstant.EXTRA_STATUS);
+        
+                switch (mStatus.getStatusCode()) {
+                    case com.huawei.hms.common.api.CommonStatusCodes.SUCCESS:
+                        String message = (String) extras.get(com.huawei.hms.support.sms.common.ReadSmsConstant.EXTRA_SMS_MESSAGE);
+                        Log.d(TAG, "onReceive: HMS success " + message);
+                        if (onOtpReceived != null) {
+                            // Running the exact same string manipulation as the Google block
+                            String otpMessage = message.replace("<#> Your otp code is: ", "");
+                            String otp = otpMessage.split("\n")[0];
+                            onOtpReceived.onOtpReceived(otp);
+                        }
+                        break;
+                    case com.huawei.hms.common.api.CommonStatusCodes.TIMEOUT:
+                        Log.d(TAG, "onReceive: HMS timeout");
+                        if (onOtpReceived != null) {
+                            onOtpReceived.onOtpTimeout();
+                        }
+                        break;
                 }
             }
         }
