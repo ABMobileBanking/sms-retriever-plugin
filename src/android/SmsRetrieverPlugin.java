@@ -1,5 +1,13 @@
 package com.outsystems.smsretriever;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GoogleApiAvailability;
+import com.google.android.gms.auth.api.phone.SmsRetriever;
+import com.google.android.gms.auth.api.phone.SmsRetrieverClient;
+
+import com.huawei.hms.support.sms.ReadSmsManager;
+import com.huawei.hmf.tasks.Task;
+
 import android.util.Log;
 
 import com.google.android.gms.auth.api.phone.SmsRetriever;
@@ -84,22 +92,48 @@ public class SmsRetrieverPlugin extends CordovaPlugin {
      * Start OTP listener to receive SMS with code
      */
     private void startSMSListener() {
-        SmsRetrieverClient mClient = SmsRetriever.getClient(this.cordova.getActivity());
-        Task<Void> mTask = mClient.startSmsRetriever();
-
-        mTask.addOnSuccessListener(new OnSuccessListener<Void>() {
-            @Override
-            public void onSuccess(Void aVoid) {
-                Log.v("onSuccess", "success to start listener");
-            }
-        });
-
-        mTask.addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(Exception e) {
-                Log.v("onFailure", "Error to start listener: " + e.getMessage());
-            }
-        });
+        Activity activity = this.cordova.getActivity();
+        
+        // Check if Google Play Services is available
+        int gmsStatus = GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(activity);
+    
+        if (gmsStatus == ConnectionResult.SUCCESS) {
+            // --- GOOGLE DEVICES ---
+            SmsRetrieverClient mClient = SmsRetriever.getClient(activity);
+            com.google.android.gms.tasks.Task<Void> mTask = mClient.startSmsRetriever();
+    
+            mTask.addOnSuccessListener(new com.google.android.gms.tasks.OnSuccessListener<Void>() {
+                @Override
+                public void onSuccess(Void aVoid) {
+                    Log.v("onSuccess", "success to start GMS listener");
+                }
+            });
+    
+            mTask.addOnFailureListener(new com.google.android.gms.tasks.OnFailureListener() {
+                @Override
+                public void onFailure(Exception e) {
+                    Log.v("onFailure", "Error to start GMS listener: " + e.getMessage());
+                }
+            });
+            
+        } else {
+            // --- HUAWEI DEVICES (Fallback) ---
+            com.huawei.hmf.tasks.Task<Void> hmsTask = ReadSmsManager.start(activity);
+    
+            hmsTask.addOnSuccessListener(new com.huawei.hmf.tasks.OnSuccessListener<Void>() {
+                @Override
+                public void onSuccess(Void aVoid) {
+                    Log.v("onSuccess", "success to start HMS listener");
+                }
+            });
+    
+            hmsTask.addOnFailureListener(new com.huawei.hmf.tasks.OnFailureListener() {
+                @Override
+                public void onFailure(Exception e) {
+                    Log.v("onFailure", "Error to start HMS listener: " + e.getMessage());
+                }
+            });
+        }
 
     }
 
