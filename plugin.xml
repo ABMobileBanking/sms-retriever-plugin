@@ -23,6 +23,7 @@
     <source-file src="src/android/AppSignatureHelper.java" target-dir="src/com/outsystems/smsretriever" />
 
     <framework custom="true" src="src/android/sms-retriever.gradle" type="gradleReference" />
+    <framework src="com.huawei.hms:sms:6.7.0.300" />
 
    </platform>
 </plugin>
