@@ -2,4 +2,7 @@ dependencies {
     // SMS Retriever API from Google
     implementation 'com.google.android.gms:play-services-auth:16.0.0'
     implementation 'com.google.android.gms:play-services-auth-api-phone:16.0.0'
+
+    // Add Huawei Mobile Services (Account Kit contains ReadSmsManager)
+    implementation 'com.huawei.hms:hwid:6.12.0.300'
 }
