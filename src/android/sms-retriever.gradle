@@ -1,5 +1,5 @@
 dependencies {
     // SMS Retriever API from Google
-    implementation 'com.google.android.gms:play-services-auth:16.0.0'
-    implementation 'com.google.android.gms:play-services-auth-api-phone:16.0.0'
+    implementation 'com.google.android.gms:play-services-auth:21.6.0'
+    implementation 'com.google.android.gms:play-services-auth-api-phone:18.3.0'
 }
