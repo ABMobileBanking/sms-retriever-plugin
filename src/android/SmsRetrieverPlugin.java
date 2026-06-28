@@ -2,8 +2,6 @@ package com.outsystems.smsretriever;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
-import com.google.android.gms.auth.api.phone.SmsRetriever;
-import com.google.android.gms.auth.api.phone.SmsRetrieverClient;
 
 import com.huawei.hms.support.sms.ReadSmsManager;
 import com.huawei.hmf.tasks.Task;
