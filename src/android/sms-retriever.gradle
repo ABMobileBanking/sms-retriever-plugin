@@ -1,3 +1,8 @@
+// Add the Huawei repository so Gradle knows where to download the HMS SDK
+repositories {
+    maven { url 'https://developer.huawei.com/repo/' }
+}
+
 dependencies {
     // SMS Retriever API from Google
     implementation 'com.google.android.gms:play-services-auth:16.0.0'
