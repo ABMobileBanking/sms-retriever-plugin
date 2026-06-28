@@ -14,6 +14,8 @@ import com.google.android.gms.auth.api.phone.SmsRetriever;
 import com.google.android.gms.common.api.CommonStatusCodes;
 import com.google.android.gms.common.api.Status;
 
+import com.huawei.hms.support.sms.common.ReadSmsConstant;
+
 /**
  * Created by pcamilo on 10/10/2019
  */
